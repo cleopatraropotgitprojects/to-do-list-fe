@@ -8,7 +8,7 @@ export const RoutesIndex = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to={`/day/${today}`} />} />
-      <Route path="/" element={<DayPage />} />
+      <Route path="/day/:dateId" element={<DayPage />} />
     </Routes>
   );
 };
