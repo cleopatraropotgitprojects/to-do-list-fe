@@ -18,7 +18,7 @@ export const DayHeader = (props: { dateId: string }) => {
   };
 
   return (
-    <div className="fixed bottom-2 left-0 w-full bg-white border-t border-gray-300 shadow-sm flex justify-between items-center px-4 py-3 z-10">
+    <div className="w-full bg-white flex justify-between items-center">
       <button
         onClick={goToPrevious}
         className="text-sm text-blue-500 hover:underline"
