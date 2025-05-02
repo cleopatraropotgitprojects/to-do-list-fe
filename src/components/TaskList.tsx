@@ -89,6 +89,7 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
         setLoading(false);
       }
     };
+
     fetchTasks();
   }, [dateId]);
 
@@ -128,7 +129,7 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
   };
 
   return (
-    <div className="mt-10">
+    <div>
       <div className="flex justify-end">
         <button
           onClick={() => setShowModal(true)}
