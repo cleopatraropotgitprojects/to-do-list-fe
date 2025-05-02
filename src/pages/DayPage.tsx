@@ -16,7 +16,8 @@ export const DayPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <h1 className="font-bold text-xl text-center">Day: {dateId}</h1>
+      <DayHeader dateId={dateId} />
+      {/*<h1 className="font-bold text-xl text-center">Day: {dateId}</h1>*/}
       <div className="mt-6 space-y-2">
         <TaskList
           dateId={dateId}
@@ -27,7 +28,6 @@ export const DayPage = () => {
           ]}
         />
       </div>
-      <DayHeader dateId={dateId} />
     </div>
   );
 };
