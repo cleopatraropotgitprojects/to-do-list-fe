@@ -89,6 +89,7 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
         setLoading(false);
       }
     };
+
     fetchTasks();
   }, [dateId]);
 
