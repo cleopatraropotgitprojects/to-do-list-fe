@@ -40,8 +40,8 @@ export const TaskItem = (props: {
   return (
     <div
       className={clsx(
-        "w-full group flex items-center justify-between px-4 py-3 border rounded-lg shadow-sm transition-all duration-200",
-        checked ? "bg-green-50 border-green-300" : "bg-white border-gray-300",
+        "w-full group flex items-center justify-between px-4 py-3 rounded-lg shadow-sm transition-all duration-200",
+        checked ? "bg-green-50" : "",
       )}
     >
       <div className="flex items-center gap-3 w-full">
