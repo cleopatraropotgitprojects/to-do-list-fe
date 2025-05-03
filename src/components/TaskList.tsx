@@ -14,7 +14,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Plus } from "lucide-react";
+import { LoaderCircle, Plus } from "lucide-react";
 import axios from "axios";
 import { isToday, parseISO } from "date-fns";
 
@@ -69,9 +69,11 @@ const SortableTask = ({
 
 export const TaskList = ({ dateId }: { dateId: string }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newTaskText, setNewTaskText] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
+
   const date = parseISO(dateId);
   const today = new Date();
 
@@ -81,6 +83,9 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
 
   useEffect(() => {
     const fetchTasks = async () => {
+      setTasks([]);
+      setLoading(true);
+
       try {
         const res = await axios.get(
           `https://to-do-list-be-x9ex.onrender.com/tasks?date=${dateId}`,
@@ -113,29 +118,37 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
   const addTask = async () => {
     if (!newTaskText.trim()) return;
 
-    const res = await axios.post(
-      "https://to-do-list-be-x9ex.onrender.com/tasks",
-      {
-        text: newTaskText,
-        isRoutine: false,
-        done: false,
-        date: dateId,
-      },
-    );
+    setIsAdding(true);
 
-    setTasks((prev) => [
-      ...prev,
-      ...(Array.isArray(res.data) ? res.data : [res.data]),
-    ]);
-    setNewTaskText("");
-    setShowModal(false);
+    try {
+      const res = await axios.post(
+        "https://to-do-list-be-x9ex.onrender.com/tasks",
+        {
+          text: newTaskText,
+          isRoutine: false,
+          done: false,
+          date: dateId,
+        },
+      );
+
+      setTasks((prev) => [
+        ...prev,
+        ...(Array.isArray(res.data) ? res.data : [res.data]),
+      ]);
+
+      setNewTaskText("");
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   const isPastDate = date < today && !isToday(date);
-  const hasTasks = tasks.length > 0;
 
   return (
-    <div>
+    <>
       <div className="flex justify-end">
         <button
           onClick={() => setShowModal(true)}
@@ -166,9 +179,14 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
                 </button>
                 <button
                   onClick={addTask}
-                  className="px-5 py-2 bg-yellow-400 text-white font-medium rounded-md hover:bg-yellow-500 transition"
+                  disabled={isAdding}
+                  className="px-5 py-2 bg-yellow-400 text-white font-medium rounded-md hover:bg-yellow-500 transition flex items-center justify-center min-w-[100px]"
                 >
-                  Add Task
+                  {isAdding ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    "Add Task"
+                  )}
                 </button>
               </div>
             </div>
@@ -181,7 +199,11 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        {tasks.length === 0 || hasTasks ? (
+        {isLoading ? (
+          <div className="text-center py-8 text-yellow-400 flex justify-center">
+            <LoaderCircle className="animate-spin text-3xl" />
+          </div>
+        ) : tasks.length === 0 ? (
           <div className="text-center text-gray-500 py-4">
             {isPastDate ? "No task added." : "Add a Task"}
           </div>
@@ -213,6 +235,6 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
           </SortableContext>
         )}
       </DndContext>
-    </div>
+    </>
   );
 };

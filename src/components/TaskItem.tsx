@@ -40,7 +40,7 @@ export const TaskItem = (props: {
   return (
     <div
       className={clsx(
-        "group w-full flex items-center justify-between px-5 py-4 rounded-xl shadow-sm transition-all duration-200 bg-white mx-4",
+        "group w-full flex items-center justify-between px-5 py-4 rounded-xl shadow-sm transition-all duration-200 bg-white mx-4 animate-fadeInUp",
         checked ? "border-l-4 border-green-500 opacity-80" : "hover:shadow-md",
       )}
     >

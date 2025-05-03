@@ -57,7 +57,7 @@ export const DayHeader = ({ dateId }: { dateId: string }) => {
 
       <div className="bg-white/50 backdrop-blur-md py-2 rounded-xl shadow-sm">
         <h2 className="text-center text-lg md:text-xl font-semibold text-gray-900 mb-3">
-          {format(selectedDate, "MMMM")}
+          {format(days[Math.floor(days.length / 2)], "MMMM yyyy")}
         </h2>
         <div className="grid grid-cols-9 items-center gap-[2px] text-center text-xs mb-5 md:text-sm">
           <div></div>
@@ -93,7 +93,7 @@ export const DayHeader = ({ dateId }: { dateId: string }) => {
                 : "text-gray-500 hover:bg-gray-100"
           }`}
               >
-                {format(date, "d")}
+                <span className="leading-tight">{format(date, "d")}</span>
               </button>
             );
           })}

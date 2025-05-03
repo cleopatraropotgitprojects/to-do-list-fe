@@ -16,11 +16,16 @@ module.exports = {
           "0%": { transform: "scale(0.95)", opacity: 0 },
           "100%": { transform: "scale(1)", opacity: 1 },
         },
+        fadeInUp: {
+          "0%": { opacity: 0, transform: "translateY(10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
       },
       animation: {
         fade: "fade 0.8s ease-out forwards",
         slideUp: "slideUp 0.6s ease-out forwards",
         zoomIn: "zoomIn 0.6s ease-out forwards",
+        fadeInUp: "fadeInUp 0.4s ease-out",
       },
     },
   },
