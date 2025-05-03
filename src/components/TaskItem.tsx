@@ -14,7 +14,6 @@ export const TaskItem = (props: {
   const [checked, setChecked] = useState(false);
   const [value, setValue] = useState(props.text);
   const [editing, setEditing] = useState(false);
-  console.log("TaskItem", props.id, "canEdit:", props.canEdit);
 
   const handleSave = async () => {
     await axios.put(
