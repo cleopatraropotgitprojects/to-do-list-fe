@@ -8,6 +8,8 @@ import {
   differenceInCalendarDays,
 } from "date-fns";
 import { useNavigate } from "react-router-dom";
+// @ts-ignore
+import profilePic from "../types/kek.png";
 
 export const DayHeader = ({ dateId }: { dateId: string }) => {
   const initialDate = parseISO(dateId);
@@ -39,71 +41,72 @@ export const DayHeader = ({ dateId }: { dateId: string }) => {
 
   return (
     <div className="w-full p-4">
-      <div className="text-left mb-4 px-2">
-        <p className="text-sm md:text-base text-gray-500 font-medium">
-          Hi, Cleopatra,
-        </p>
-        <h1 className="text-lg md:text-xl font-semibold text-gray-900">
-          What’s up for today?
-        </h1>
+      <div className="flex justify-between items-center mb-6 px-4">
+        <div>
+          <p className="text-sm text-gray-400 font-medium">Hello, User 👋</p>
+          <h1 className="text-2xl font-bold text-gray-900 mt-1">
+            Let’s plan your day!
+          </h1>
+        </div>
+        <img
+          src={profilePic}
+          alt="Profile"
+          className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-md"
+        />
       </div>
 
-      {/* Luna */}
-      <h2 className="text-center text-lg md:text-xl font-semibold text-gray-900 mb-3">
-        {format(selectedDate, "MMMM")}
-      </h2>
+      <div className="bg-white/50 backdrop-blur-md py-2 rounded-xl shadow-sm">
+        <h2 className="text-center text-lg md:text-xl font-semibold text-gray-900 mb-3">
+          {format(selectedDate, "MMMM")}
+        </h2>
+        <div className="grid grid-cols-9 items-center gap-[2px] text-center text-xs mb-5 md:text-sm">
+          <div></div>
+          {days.map((date) => (
+            <div key={format(date, "yyyy-MM-dd")} className="text-gray-500">
+              {format(date, "EEE")}
+            </div>
+          ))}
+          <div></div>
 
-      {/* Header cu zilele săptămânii + zilele lunii */}
-      <div className="grid grid-cols-9 items-center gap-1 text-center text-xs mb-5 md:text-sm">
-        <div></div>
-        {days.map((date) => (
-          <div key={format(date, "yyyy-MM-dd")} className="text-gray-500">
-            {format(date, "EEE")}
-          </div>
-        ))}
-        <div></div>
+          <button
+            onClick={goToPrevious}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            ←
+          </button>
 
-        <button
-          onClick={goToPrevious}
-          className="text-sm text-gray-500 hover:text-gray-700"
-        >
-          ←
-        </button>
+          {days.map((date) => {
+            const id = format(date, "yyyy-MM-dd");
+            const isSelected = format(selectedDate, "yyyy-MM-dd") === id;
+            const isTodayDate = isToday(date);
 
-        {days.map((date) => {
-          const id = format(date, "yyyy-MM-dd");
-          const isSelected = format(selectedDate, "yyyy-MM-dd") === id;
-          const isTodayDate = isToday(date);
-          const isTodaySelected = isTodayDate && isSelected;
+            return (
+              <button
+                key={id}
+                onClick={() => navigate(`/day/${id}`)}
+                className={`w-7 h-7 md:w-8 md:h-8 rounded-full text-xs md:text-sm font-medium flex items-center justify-center mx-auto
+          ${
+            isSelected
+              ? "bg-yellow-400 text-white shadow"
+              : isTodayDate
+                ? "border border-yellow-400 text-yellow-500"
+                : "text-gray-500 hover:bg-gray-100"
+          }`}
+              >
+                {format(date, "d")}
+              </button>
+            );
+          })}
 
-          return (
-            <button
-              key={id}
-              onClick={() => navigate(`/day/${format(date, "yyyy-MM-dd")}`)}
-              className={`w-8 h-8 rounded-full text-sm md:text-base font-medium flex items-center justify-center mx-auto
-                ${
-                  isTodaySelected
-                    ? "bg-pink-100 text-purple-600"
-                    : isTodayDate
-                      ? "border border-purple-300 text-purple-500"
-                      : isSelected
-                        ? "bg-gray-200 text-gray-800"
-                        : "text-gray-800 hover:bg-gray-100"
-                }`}
-            >
-              {format(date, "d")}
-            </button>
-          );
-        })}
-
-        <button
-          onClick={goToNext}
-          className="text-sm text-gray-500 hover:text-gray-700"
-        >
-          →
-        </button>
+          <button
+            onClick={goToNext}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            →
+          </button>
+        </div>
       </div>
-      <hr />
+
       <div className="mt-6 px-2">
         <p className="text-[11px] uppercase text-gray-400 tracking-wide">
           {label ?? format(currentDate, "EEEE")}
