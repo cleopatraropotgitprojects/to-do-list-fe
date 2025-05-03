@@ -40,8 +40,8 @@ export const TaskItem = (props: {
   return (
     <div
       className={clsx(
-        "w-full group flex items-center justify-between px-4 py-3 rounded-lg shadow-sm transition-all duration-200",
-        checked ? "bg-green-50" : "",
+        "group w-full flex items-center justify-between px-5 py-4 rounded-xl shadow-sm transition-all duration-200 bg-white mx-4",
+        checked ? "border-l-4 border-green-500 opacity-80" : "hover:shadow-md",
       )}
     >
       <div className="flex items-center gap-3 w-full">
@@ -50,7 +50,7 @@ export const TaskItem = (props: {
           disabled={!props.canCheck}
           checked={checked}
           onChange={() => setChecked(!checked)}
-          className="w-4 h-4 accent-green-500"
+          className="w-5 h-5 accent-green-500 transition"
         />
         {editing ? (
           <input
@@ -62,8 +62,8 @@ export const TaskItem = (props: {
         ) : (
           <span
             className={clsx(
-              "text-sm flex-1",
-              checked ? "line-through opacity-50" : "text-gray-800",
+              "text-base flex-1",
+              checked ? "line-through text-gray-400" : "text-gray-900",
             )}
           >
             {value}

@@ -16,6 +16,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Plus } from "lucide-react";
 import axios from "axios";
+import { isToday, parseISO } from "date-fns";
 
 interface Task {
   id: string;
@@ -71,6 +72,8 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newTaskText, setNewTaskText] = useState("");
+  const date = parseISO(dateId);
+  const today = new Date();
 
   const dayType = getDayType(dateId);
   const isDraggable = dayType !== "past";
@@ -128,36 +131,42 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
     setShowModal(false);
   };
 
+  const isPastDate = date < today && !isToday(date);
+  const hasTasks = tasks.length > 0;
+
   return (
     <div>
       <div className="flex justify-end">
         <button
           onClick={() => setShowModal(true)}
-          className="p-2 text-slate-600 rounded-full hover:bg-slate-100"
+          className={`${isPastDate ? "bg-yellow-300 text-white cursor-not-allowed opacity-60 fixed bottom-6 right-6 p-4 rounded-full shadow-lg hover:bg-yellow-500 transition-all z-50" : "fixed bottom-6 right-6 bg-yellow-400 text-white p-4 rounded-full shadow-lg hover:bg-yellow-500 transition-all z-50"}`}
+          disabled={isPastDate}
         >
-          <Plus size={20} />
+          <Plus size={24} />
         </button>
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-              <h2 className="text-lg font-semibold mb-4">Add Task</h2>
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl shadow-2xl w-[90%] max-w-md">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
+                Add New Task
+              </h2>
               <input
                 type="text"
                 value={newTaskText}
                 onChange={(e) => setNewTaskText(e.target.value)}
-                placeholder="Task description"
-                className="w-full border px-3 py-2 rounded mb-4"
+                placeholder="What's your task?"
+                className="w-full border border-gray-300 px-4 py-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl w-[30%] hover:bg-red-100"
+                  className="px-4 py-2 text-gray-500 rounded-md hover:bg-gray-100 transition"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addTask}
-                  className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl w-[70%] hover:bg-slate-200"
+                  className="px-5 py-2 bg-yellow-400 text-white font-medium rounded-md hover:bg-yellow-500 transition"
                 >
                   Add Task
                 </button>
@@ -172,8 +181,10 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
         onDragEnd={handleDragEnd}
         sensors={sensors}
       >
-        {tasks.length === 0 ? (
-          <div className="text-center text-gray-500 py-4">Add a Task</div>
+        {tasks.length === 0 || hasTasks ? (
+          <div className="text-center text-gray-500 py-4">
+            {isPastDate ? "No task added." : "Add a Task"}
+          </div>
         ) : (
           <SortableContext
             items={tasks.map((task) => task.id)}
