@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { DayPage } from "../pages/DayPage";
-import { format } from "date-fns";
 import { Login } from "../pages/auth/Login";
 import { Register } from "../pages/auth/Register";
 import { Landing } from "../pages/auth/Landing";

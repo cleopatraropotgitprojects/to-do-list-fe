@@ -1,14 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Mail, Lock, AlertTriangle, CheckCircle } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  AlertTriangle,
+  CheckCircle,
+  User,
+  EyeOff,
+  Eye,
+} from "lucide-react";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleRegister = async () => {
@@ -22,13 +33,17 @@ export const Register = () => {
 
     setLoading(true);
     try {
-      await axios.post(
+      const response = await axios.post(
         "https://to-do-list-be-x9ex.onrender.com/auth/register",
         {
+          name,
           email,
           password,
         },
       );
+
+      // ✅ Salvăm userId în localStorage
+      localStorage.setItem("userId", response.data.userId);
 
       setSuccess("Account created. Check your email for the code.");
       setTimeout(() => {
@@ -74,6 +89,22 @@ export const Register = () => {
           <div className="space-y-5">
             <div>
               <div className="relative">
+                <User
+                  className="absolute left-4 top-3.5 text-gray-400"
+                  size={20}
+                />
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <div className="relative">
                 <Mail
                   className="absolute left-4 top-3.5 text-gray-400"
                   size={20}
@@ -95,14 +126,23 @@ export const Register = () => {
                   className="absolute left-4 top-3.5 text-gray-400"
                   size={20}
                 />
+
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
+                  className="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-4 top-3.5 text-gray-400"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 

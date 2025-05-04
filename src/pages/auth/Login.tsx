@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Mail, Lock, AlertTriangle } from "lucide-react";
+import { Mail, Lock, AlertTriangle, EyeOff, Eye } from "lucide-react";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -28,6 +30,9 @@ export const Login = () => {
       );
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("name", res.data.name || "User");
+
       navigate(`/day/${new Date().toISOString().split("T")[0]}`);
     } catch (err: any) {
       if (axios.isAxiosError(err)) {
@@ -88,14 +93,23 @@ export const Login = () => {
                   className="absolute left-4 top-3.5 text-gray-400"
                   size={20}
                 />
+
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
+                  className="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-4 top-3.5 text-gray-400"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 

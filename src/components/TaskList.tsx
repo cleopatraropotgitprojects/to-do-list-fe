@@ -83,12 +83,18 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      setTasks([]);
-      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) return; // 🔐 Nu apela dacă nu există token
 
+      setLoading(true);
       try {
         const res = await axios.get(
           `https://to-do-list-be-x9ex.onrender.com/tasks?date=${dateId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
         setTasks(res.data);
       } catch (err) {
@@ -121,6 +127,8 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
     setIsAdding(true);
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await axios.post(
         "https://to-do-list-be-x9ex.onrender.com/tasks",
         {
@@ -128,6 +136,12 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
           isRoutine: false,
           done: false,
           date: dateId,
+          userId: localStorage.getItem("userId"),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
 
