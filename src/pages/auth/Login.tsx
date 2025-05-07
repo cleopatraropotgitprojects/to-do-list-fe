@@ -46,6 +46,7 @@ export const Login = () => {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("email", res.data.email || "");
       localStorage.setItem("name", res.data.name || "User");
 
       navigate(`/day/${new Date().toISOString().split("T")[0]}`);

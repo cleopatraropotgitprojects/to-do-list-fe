@@ -57,7 +57,6 @@ export const Register = () => {
         },
       );
 
-      // ✅ Salvăm userId în localStorage
       localStorage.setItem("userId", response.data.userId);
 
       setSuccess("Account created. Check your email for the code.");
