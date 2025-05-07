@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Mail, Lock, AlertTriangle, EyeOff, Eye } from "lucide-react";
-import { GoogleLoginButton } from "../../components/GoogleLoginButton";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +9,21 @@ export const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showWaitMessage, setShowWaitMessage] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | undefined;
+
+    if (loading) {
+      timer = setTimeout(() => setShowWaitMessage(true), 5000);
+    } else {
+      setShowWaitMessage(false);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [loading]);
 
   const navigate = useNavigate();
 
@@ -32,6 +46,7 @@ export const Login = () => {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("email", res.data.email || "");
       localStorage.setItem("name", res.data.name || "User");
 
       navigate(`/day/${new Date().toISOString().split("T")[0]}`);
@@ -58,6 +73,12 @@ export const Login = () => {
     <div className="min-h-screen bg-gradient-to-b from-yellow-50 via-white to-pink-50 px-4 relative overflow-hidden">
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
         <div className="bg-white rounded-2xl shadow-xl w-full max-w-md px-8 py-10">
+          {loading && showWaitMessage && (
+            <div className="mb-4 text-center text-sm text-yellow-600 font-medium">
+              Wait a few minutes until the server is running...
+            </div>
+          )}
+
           <h1 className="text-3xl font-extrabold text-gray-900 mb-3">
             Welcome <span className="inline-block">👋</span>
           </h1>
@@ -119,7 +140,11 @@ export const Login = () => {
               disabled={loading}
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-white py-3 rounded-xl font-semibold text-base transition shadow-md"
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading
+                ? showWaitMessage
+                  ? "Log in"
+                  : "Logging in..."
+                : "Log in"}
             </button>
           </div>
 

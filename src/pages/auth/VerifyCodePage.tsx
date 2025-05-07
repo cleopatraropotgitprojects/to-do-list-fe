@@ -55,7 +55,7 @@ export const VerifyCodePage = () => {
       });
 
       setSuccess("Account verified!");
-      setTimeout(() => navigate("/auth/login"), 2000); // navighează după 2 sec
+      setTimeout(() => navigate("/auth/login"), 2000);
     } catch (err) {
       console.error("Verification failed:", err);
       setError("Invalid verification code");
