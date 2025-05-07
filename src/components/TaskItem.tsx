@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Pencil, Check, Trash } from "lucide-react";
 import axios from "axios";
@@ -6,6 +6,7 @@ import axios from "axios";
 export const TaskItem = (props: {
   id: string;
   text: string;
+  done: boolean;
   canEdit: boolean;
   canCheck: boolean;
   onDelete: (id: string) => void;
@@ -87,6 +88,10 @@ export const TaskItem = (props: {
       setIsToggling(false);
     }
   };
+
+  useEffect(() => {
+    setChecked(props.done);
+  }, [props.done]);
 
   return (
     <div

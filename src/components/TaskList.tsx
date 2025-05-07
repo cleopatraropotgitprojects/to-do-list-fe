@@ -21,6 +21,7 @@ import { isToday, parseISO } from "date-fns";
 interface Task {
   id: string;
   text: string;
+  done: boolean;
 }
 
 const SortableTask = ({
@@ -231,6 +232,7 @@ export const TaskList = ({ dateId }: { dateId: string }) => {
                 <TaskItem
                   id={task.id}
                   text={task.text}
+                  done={task.done}
                   canEdit={isDraggable}
                   canCheck={dayType === "today"}
                   onDelete={(id) =>
